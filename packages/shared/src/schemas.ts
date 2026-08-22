@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { USER_ROLES } from './constants.js';
 
-export const UserRoleSchema = z.enum(['admin', 'user']);
+export const UserRoleSchema = z.enum([USER_ROLES.ADMIN, USER_ROLES.USER]);
 
 export const LoginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -19,5 +20,10 @@ export const DeleteUserSchema = z.object({
   userId: UserIdSchema,
 });
 
+export const UpdateProfileSchema = z.object({
+  username: z.string().min(1, 'Name is required').max(255),
+});
+
 export type LoginInput = z.infer<typeof LoginSchema>;
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;
