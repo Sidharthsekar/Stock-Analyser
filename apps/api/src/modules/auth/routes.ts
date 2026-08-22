@@ -1,10 +1,10 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { LoginSchema } from '@stock-analyser/shared';
-import { createInvalidCredentialsError, createValidationError, createAuthenticationError } from '../utils/errors.js';
-import { createAuthMiddleware } from '../middleware/auth.middleware.js';
-import { config } from '../config/index.js';
-import type { AuthService } from '../services/auth.service.js';
-import type { UserRepository } from '../repositories/index.js';
+import { createInvalidCredentialsError, createValidationError } from '../../utils/errors.js';
+import { createAuthMiddleware } from '../../middleware/auth.middleware.js';
+import { config } from '../../config/index.js';
+import type { AuthService } from '../../services/auth.service.js';
+import type { UserRepository } from '../../repositories/index.js';
 
 export function registerAuthRoutes(fastify: FastifyInstance, authService: AuthService, userRepository: UserRepository) {
   const authMiddleware = createAuthMiddleware(authService, userRepository);
@@ -54,8 +54,11 @@ export function registerAuthRoutes(fastify: FastifyInstance, authService: AuthSe
   });
 
   // Logout
-  fastify.post('/api/auth/logout', { onRequest: [authMiddleware] }, async (_request: FastifyRequest, reply: FastifyReply) => {
-    reply.clearCookie(config.sessionCookieName);
+  fastify.post('/api/auth/logout', { onRequest: [authMiddleware] }, async (request: FastifyRequest, reply: FastifyReply) => {
+    if(request.sessionId){
+      await authService.invalidateSession(request.sessionId);
+    }
+    reply.clearCookie(config.sessionCookieName, { path: '/'});
     return reply.send({
       success: true,
       data: null,

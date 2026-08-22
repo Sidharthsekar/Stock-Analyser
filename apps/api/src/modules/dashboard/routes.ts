@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { createAuthMiddleware } from '../middleware/auth.middleware.js';
-import type { AuthService } from '../services/auth.service.js';
-import type { UserRepository } from '../repositories/index.js';
+import { createAuthMiddleware } from '../../middleware/auth.middleware.js';
+import type { AuthService } from '../../services/auth.service.js';
+import type { UserRepository } from '../../repositories/index.js';
 
 export function registerDashboardRoutes(fastify: FastifyInstance, authService: AuthService, userRepository: UserRepository) {
   const authMiddleware = createAuthMiddleware(authService, userRepository);

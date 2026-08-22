@@ -14,7 +14,6 @@ function getEnv(key: string, defaultValue?: string): string {
 export const config = {
   nodeEnv: getEnv('NODE_ENV', 'development'),
   apiPort: parseInt(getEnv('API_PORT', '3001'), 10),
-  webPort: parseInt(getEnv('WEB_PORT', '5173'), 10),
   sessionCookieName: getEnv('SESSION_COOKIE_NAME', 'session'),
   sessionTimezone: getEnv('SESSION_TIMEZONE', 'Asia/Kolkata'),
   sessionCookieSecure: getEnv('SESSION_COOKIE_SECURE', 'false') === 'true',
