@@ -1,0 +1,30 @@
+{
+  "name": "stock-analyser",
+  "version": "0.1.0",
+  "description": "Lightweight TypeScript monorepo for stock market research (foundation only)",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "install": "pnpm install",
+    "dev": "pnpm --parallel -r run dev",
+    "dev:web": "pnpm -C apps/web dev",
+    "dev:api": "pnpm -C apps/api dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "format": "pnpm -r run format",
+    "test": "pnpm -r run test",
+    "test:api": "pnpm -C apps/api run test",
+    "test:e2e": "pnpm -C tests/e2e run test",
+    "test:e2e:ui": "pnpm -C tests/e2e run test:ui",
+    "seed": "pnpm -C apps/api run seed"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}
