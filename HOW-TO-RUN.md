@@ -36,7 +36,7 @@ pnpm seed
 
 This creates an initial admin account with:
 - **Email:** admin@example.com
-- **Password:** AdminPassword123
+- **Password:** Admin@123
 
 ### 4. Start the Application
 
@@ -55,7 +55,7 @@ Visit http://localhost:5173 and login with:
 
 ```
 Email: admin@example.com
-Password: AdminPassword123
+Password: Admin@123
 ```
 
 ---
@@ -130,7 +130,9 @@ API_PORT=3002
 WEB_PORT=5174
 ```
 
-2. Restart the application
+2. Edit `apps/web/vite.config.ts` and change `server.port` to the new port.
+
+3. Restart the application
 
 ### Seed Script Fails
 
@@ -204,13 +206,13 @@ Then login with the new credentials.
 | Command | Purpose |
 |---------|---------|
 | `pnpm install` | Install dependencies |
-| `pnpm seed` | Create initial admin user |
+| `pnpm seed` | Build shared and Create initial admin user |
 | `pnpm dev` | Start frontend + backend |
 | `pnpm dev:web` | Start frontend only |
 | `pnpm dev:api` | Start backend only |
 | `pnpm test:api` | Run API tests |
 | `pnpm test:e2e` | Run E2E tests |
-| `pnpm build` | Build for production |
+| `pnpm build` | Build all pacakages in dependency order |
 | `pnpm lint` | Check code quality |
 | `pnpm typecheck` | Check TypeScript types |
 | `pnpm format` | Auto-format code |
