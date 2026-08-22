@@ -227,7 +227,7 @@ This creates the initial admin user with credentials from `.env`:
 
 ```
 Email: admin@example.com
-Password: AdminPassword123
+Password: Admin@123
 Username: admin
 ```
 
@@ -441,7 +441,7 @@ TEST_DATA_DIRECTORY=./test-data       # Test data directory
 
 # Initial Admin
 ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=AdminPassword123
+ADMIN_PASSWORD=Admin@123
 ADMIN_USERNAME=admin
 ```
 
