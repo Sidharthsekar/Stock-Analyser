@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
-import helmet from 'fastify-helmet';
-import cors from 'fastify-cors';
+import helmet from '@fastify/helmet';
+import cors from '@fastify/cors';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { config, isDevelopment } from './config/index.js';
 import { JsonUserRepository, JsonSessionRepository } from './repositories/index.js';
