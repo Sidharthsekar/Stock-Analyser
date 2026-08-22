@@ -1,0 +1,20 @@
+[
+  {
+    "username": "Sidharth",
+    "email": "admin@example.com",
+    "passwordHash": "$argon2id$v=19$m=19456,p=1,t=2$rHW6cWMGGiD/r+BXbDfSLg$WK/JNwPsOUMvY+RBUaS/9x/qeb8PlkspYnx17h9Sgv4",
+    "role": "admin",
+    "createdAt": 1787388521665,
+    "updatedAt": 1787398213815,
+    "id": "62652989-ed29-4fdd-be78-e4f57ed9c083"
+  },
+  {
+    "username": "Karthik",
+    "email": "karthik@example.com",
+    "passwordHash": "$argon2id$v=19$m=19456,p=1,t=2$AT2aGxSFRgxPmOGZ9FwPww$Z/gypomyNNlKjHiXcK2xNZBIn8GtjS/NN4SCUwhwK6s",
+    "role": "user",
+    "createdAt": 1787391476671,
+    "updatedAt": 1787391476671,
+    "id": "0f502af5-8a96-4f19-8a56-5af9a6b08db8"
+  }
+]
