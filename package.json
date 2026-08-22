@@ -12,15 +12,14 @@
     "dev": "pnpm --parallel -r run dev",
     "dev:web": "pnpm -C apps/web dev",
     "dev:api": "pnpm -C apps/api dev",
-    "build": "pnpm -r run build",
+    "build": "pnpm --filter @stock-analyser/shared build && pnpm --filter @stock-analyser/api --filter @stock-analyser/web build",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "format": "pnpm -r run format",
-    "test": "pnpm -r run test",
-    "test:api": "pnpm -C apps/api run test",
+    "test:api": "pnpm -C tests/api run test",
     "test:e2e": "pnpm -C tests/e2e run test",
     "test:e2e:ui": "pnpm -C tests/e2e run test:ui",
-    "seed": "pnpm -C apps/api run seed"
+    "seed": "pnpm --filter @stock-analyser/shared build && pnpm -C apps/api run seed"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
