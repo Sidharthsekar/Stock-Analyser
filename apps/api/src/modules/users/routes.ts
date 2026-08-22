@@ -2,16 +2,14 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { CreateUserSchema, USER_ROLES } from '@stock-analyser/shared';
 import {
   createValidationError,
-  createAuthorizationError,
   createConflictError,
-  createCannotDeleteSelfError,
-  createCannotDeleteLastAdminError,
+  createCannotDeleteAdminError,
   createNotFoundError,
   createAuthenticationError,
-} from '../utils/errors.js';
-import { createAuthMiddleware, createAuthorizationMiddleware } from '../middleware/auth.middleware.js';
-import type { AuthService } from '../services/auth.service.js';
-import type { UserRepository } from '../repositories/index.js';
+} from '../../utils/errors.js';
+import { createAuthMiddleware, createAuthorizationMiddleware } from '../../middleware/auth.middleware.js';
+import type { AuthService } from '../../services/auth.service.js';
+import type { UserRepository } from '../../repositories/index.js';
 
 export function registerUsersRoutes(fastify: FastifyInstance, authService: AuthService, userRepository: UserRepository) {
   const authMiddleware = createAuthMiddleware(authService, userRepository);
@@ -45,11 +43,6 @@ export function registerUsersRoutes(fastify: FastifyInstance, authService: AuthS
       const existingByEmail = await userRepository.findByEmail(email);
       if (existingByEmail) {
         throw createConflictError(`User with email ${email} already exists`);
-      }
-
-      const existingByUsername = await userRepository.findByUsername(username);
-      if (existingByUsername) {
-        throw createConflictError(`User with username ${username} already exists`);
       }
 
       const passwordHash = await authService.hashPassword(password);
@@ -91,23 +84,13 @@ export function registerUsersRoutes(fastify: FastifyInstance, authService: AuthS
       throw createAuthenticationError();
     }
 
-    // Check if user is trying to delete themselves
-    if (userId === request.user.id) {
-      throw createCannotDeleteSelfError();
-    }
-
     const userToDelete = await userRepository.getById(userId);
     if (!userToDelete) {
       throw createNotFoundError('User not found');
     }
 
-    // Check if trying to delete the last admin
     if (userToDelete.role === USER_ROLES.ADMIN) {
-      const allUsers = await userRepository.getAll();
-      const adminCount = allUsers.filter((u) => u.role === USER_ROLES.ADMIN).length;
-      if (adminCount === 1) {
-        throw createCannotDeleteLastAdminError();
-      }
+      throw createCannotDeleteAdminError();
     }
 
     const deleted = await userRepository.delete(userId);
