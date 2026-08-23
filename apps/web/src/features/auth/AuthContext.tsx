@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { AuthenticatedUser } from '@stock-analyser/shared';
-import { apiClient, handleApiError } from '../lib/api';
+import { apiClient, handleApiError } from '../../lib/api';
+import type { ApiResponse } from '../../lib/api';
 
 interface AuthContextType {
   user: AuthenticatedUser | null;
@@ -19,15 +20,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
   const [sessionExpiredMessage, setSessionExpiredMessage] = useState<string | null>(null);
 
-  // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await apiClient.get<any>('/api/auth/me');
+        const response = await apiClient.get<ApiResponse<{ user: AuthenticatedUser }>>('/api/auth/me');
         if (response.data.success && response.data.data?.user) {
           setUser(response.data.data.user);
         }
-      } catch (error) {
+      } catch {
         // Not authenticated, which is fine
       } finally {
         setLoading(false);
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await apiClient.post<any>('/api/auth/login', { email, password });
+      const response = await apiClient.post<ApiResponse<{ user: AuthenticatedUser }>>('/api/auth/login', { email, password });
       if (response.data.success && response.data.data?.user) {
         setUser(response.data.data.user);
         setSessionExpiredMessage(null);
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = async () => {
     try {
       await apiClient.post('/api/auth/logout');
-    } catch (error) {
+    } catch {
       // Ignore errors on logout
     } finally {
       setUser(null);
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const setSessionExpired = (message?: string) => {
     setUser(null);
-    setSessionExpiredMessage(message || 'Your session has expired. Please log in again.');
+    setSessionExpiredMessage(message ?? 'Your session has expired. Please log in again.');
   };
 
   const value: AuthContextType = {
