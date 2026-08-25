@@ -29,6 +29,3 @@ function getTimezoneOffset(date: Date, timezone: string): number {
   return utcDate.getTime() - tzDate.getTime();
 }
 
-export function isSessionExpired(expiresAt: number): boolean {
-  return Date.now() > expiresAt;
-}

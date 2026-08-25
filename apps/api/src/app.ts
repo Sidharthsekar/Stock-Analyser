@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { config, isDevelopment } from './config/index.js';
 import { JsonUserRepository, JsonSessionRepository } from './repositories/index.js';
@@ -10,40 +11,35 @@ import { registerDashboardRoutes } from './modules/dashboard/routes.js';
 import { registerProfileRoutes } from './modules/profile/routes.js';
 import { registerUsersRoutes } from './modules/users/routes.js';
 import { AppError } from './utils/errors.js';
-import { isDevelopment as isDev } from './config/index.js';
+import { ERROR_CODES, HTTP_STATUS } from '@stock-analyser/shared';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const fastify = Fastify({
   logger: isDevelopment(),
 });
 
-// Security plugins
 fastify.register(helmet);
+fastify.register(cookie);
 fastify.register(cors, {
   origin: config.corsOrigin,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 });
 
-// Initialize repositories
 const usersPath = path.join(config.dataDirectory, 'users.json');
 const sessionsPath = path.join(config.dataDirectory, 'sessions.json');
 const userRepository = new JsonUserRepository(usersPath);
 const sessionRepository = new JsonSessionRepository(sessionsPath);
 
-// Initialize auth service
-const authService = new ArgonAuthService(userRepository, sessionRepository);
+const authService = new ArgonAuthService(sessionRepository);
 
-// Register routes
 registerAuthRoutes(fastify, authService, userRepository);
 registerDashboardRoutes(fastify, authService, userRepository);
 registerProfileRoutes(fastify, authService, userRepository);
 registerUsersRoutes(fastify, authService, userRepository);
 
-// Error handling
-fastify.setErrorHandler((error, _request: FastifyRequest, reply: FastifyReply) => {
+fastify.setErrorHandler((err, _request: FastifyRequest, reply: FastifyReply) => {
+  const error = err as unknown;
   if (error instanceof AppError) {
     return reply.status(error.statusCode).send({
       success: false,
@@ -54,32 +50,29 @@ fastify.setErrorHandler((error, _request: FastifyRequest, reply: FastifyReply) =
     });
   }
 
-  // Validation error from Fastify
-  if ('validation' in error && Array.isArray((error as any).validation)) {
-    return reply.status(400).send({
+  if (typeof error === 'object' && error !== null && 'validation' in error && Array.isArray((error as Record<string, unknown>).validation)) {
+    return reply.status(HTTP_STATUS.BAD_REQUEST).send({
       success: false,
       error: {
-        code: 'INVALID_INPUT',
+        code: ERROR_CODES.INVALID_INPUT,
         message: 'Invalid input',
       },
     });
   }
 
-  // Log unexpected errors
-  if (isDev()) {
+  if (isDevelopment()) {
     console.error('Unexpected error:', error);
   }
 
-  return reply.status(500).send({
+  return reply.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send({
     success: false,
     error: {
-      code: 'INTERNAL_ERROR',
-      message: isDev() ? (error as Error).message : 'Internal server error',
+      code: ERROR_CODES.INTERNAL_ERROR,
+      message: isDevelopment() && error instanceof Error ? error.message : 'Internal server error',
     },
   });
 });
 
-// Health check endpoint
 fastify.get('/health', async (_request: FastifyRequest, reply: FastifyReply) => {
   return reply.send({ status: 'ok' });
 });
