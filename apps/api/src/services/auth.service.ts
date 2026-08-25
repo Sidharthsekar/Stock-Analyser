@@ -1,8 +1,7 @@
 import { hash, verify } from 'argon2';
-import { randomUUID } from 'crypto';
-import { getTimeZone, startOfNextDay } from '../utils/timezone.js';
-import type { User, Session, AuthenticatedUser } from '@stock-analyser/shared';
-import type { UserRepository, SessionRepository } from '../repositories/index.js';
+import { startOfNextDay } from '../utils/timezone.js';
+import type { Session } from '@stock-analyser/shared';
+import type { SessionRepository } from '../repositories/index.js';
 
 export interface AuthService {
   hashPassword(password: string): Promise<string>;
@@ -10,14 +9,12 @@ export interface AuthService {
   createSession(userId: string, timezone: string): Promise<Session>;
   validateSession(sessionId: string): Promise<Session | null>;
   invalidateSession(sessionId: string): Promise<void>;
-  getSessionExpirationTime(timezone: string): number;
 }
 
 export class ArgonAuthService implements AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly sessionRepository: SessionRepository
-  ) {}
+  ) { }
 
   async hashPassword(password: string): Promise<string> {
     return hash(password, {
@@ -37,16 +34,11 @@ export class ArgonAuthService implements AuthService {
   }
 
   async createSession(userId: string, timezone: string): Promise<Session> {
-    const now = Date.now();
-    const expiresAt = startOfNextDay(timezone);
-
-    const session = await this.sessionRepository.create({
+    return this.sessionRepository.create({
       userId,
-      createdAt: now,
-      expiresAt,
+      createdAt: Date.now(),
+      expiresAt: startOfNextDay(timezone),
     });
-
-    return session;
   }
 
   async validateSession(sessionId: string): Promise<Session | null> {
@@ -56,8 +48,7 @@ export class ArgonAuthService implements AuthService {
       return null;
     }
 
-    const now = Date.now();
-    if (session.expiresAt < now) {
+    if (session.expiresAt < Date.now()) {
       await this.sessionRepository.delete(sessionId);
       return null;
     }
@@ -69,7 +60,4 @@ export class ArgonAuthService implements AuthService {
     await this.sessionRepository.delete(sessionId);
   }
 
-  getSessionExpirationTime(timezone: string): number {
-    return startOfNextDay(timezone);
-  }
 }

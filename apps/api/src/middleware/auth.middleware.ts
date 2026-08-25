@@ -1,16 +1,14 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { AuthenticatedUser, UserRole } from '@stock-analyser/shared';
-import { createAuthenticationError, createAuthorizationError } from '../utils/errors.js';
+import { createAuthenticationError, createAuthorizationError, createSessionExpiredError } from '../utils/errors.js';
 import type { AuthService } from '../services/auth.service.js';
 import type { UserRepository } from '../repositories/index.js';
 import { config } from '../config/index.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthenticatedUser;
-      sessionId?: string;
-    }
+declare module 'fastify' {
+  interface FastifyRequest {
+    user?: AuthenticatedUser;
+    sessionId?: string;
   }
 }
 
@@ -25,7 +23,7 @@ export function createAuthMiddleware(authService: AuthService, userRepository: U
     const session = await authService.validateSession(sessionId);
     if (!session) {
       reply.clearCookie(config.sessionCookieName);
-      throw createAuthenticationError('Your session has expired. Please log in again');
+      throw createSessionExpiredError();
     }
 
     const user = await userRepository.getById(session.userId);
