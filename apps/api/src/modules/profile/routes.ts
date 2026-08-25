@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { updateProfileSchema } from '@stock-analyser/shared';
-import { createNotFoundError, createValidationError } from '../../utils/error.js';
+import { UpdateProfileSchema } from '@stock-analyser/shared';
+import { createNotFoundError, createValidationError } from '../../utils/errors.js';
 import { createAuthMiddleware } from '../../middleware/auth.middleware.js';
 import type { AuthService } from '../../services/auth.service.js';
 import type { UserRepository } from '../../repositories/index.js';
@@ -35,7 +35,7 @@ export function registerProfileRoutes(fastify: FastifyInstance, authService: Aut
 
   fastify.patch('api/profile', { onRequest: [authMiddleware]}, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const { username } = updateProfileSchema.parse(request.body);
+      const { username } = UpdateProfileSchema.parse(request.body);
 
       const updated = await userRepository.update(request.user!.id, {username, updatedAt: Date.now()});
 
