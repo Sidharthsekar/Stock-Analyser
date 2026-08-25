@@ -1,7 +1,9 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { createAuthMiddleware } from '../middleware/auth.middleware.js';
-import type { AuthService } from '../services/auth.service.js';
-import type { UserRepository } from '../repositories/index.js';
+import { updateProfileSchema } from '@stock-analyser/shared';
+import { createNotFoundError, createValidationError } from '../../utils/error.js';
+import { createAuthMiddleware } from '../../middleware/auth.middleware.js';
+import type { AuthService } from '../../services/auth.service.js';
+import type { UserRepository } from '../../repositories/index.js';
 
 export function registerProfileRoutes(fastify: FastifyInstance, authService: AuthService, userRepository: UserRepository) {
   const authMiddleware = createAuthMiddleware(authService, userRepository);
@@ -29,5 +31,34 @@ export function registerProfileRoutes(fastify: FastifyInstance, authService: Aut
         createdAt: user.createdAt,
       },
     });
+  });
+
+  fastify.patch('api/profile', { onRequest: [authMiddleware]}, async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { username } = updateProfileSchema.parse(request.body);
+
+      const updated = await userRepository.update(request.user!.id, {username, updatedAt: Date.now()});
+
+      if(!updated){
+        throw createNotFoundError('User not found');
+      }
+
+      return reply.send({
+        success: true,
+        data: {
+          id: updated.id,
+          username: updated.username,
+          email: updated.email,
+          role: updated.role,
+          createdAt: updated.createdAt,
+        },
+      });
+
+    }catch(error){
+      if(error instanceof Error && 'issues' in error){
+        throw createValidationError('Invalid input');
+      }
+      throw error;
+    }
   });
 }
