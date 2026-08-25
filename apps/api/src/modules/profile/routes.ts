@@ -33,7 +33,7 @@ export function registerProfileRoutes(fastify: FastifyInstance, authService: Aut
     });
   });
 
-  fastify.patch('api/profile', { onRequest: [authMiddleware]}, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.patch('/api/profile', { onRequest: [authMiddleware]}, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { username } = UpdateProfileSchema.parse(request.body);
 
