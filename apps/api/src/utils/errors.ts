@@ -39,14 +39,10 @@ export function createSessionExpiredError(): AppError {
   return new AppError(ERROR_CODES.SESSION_EXPIRED, 'Your session has expired. Please log in again', HTTP_STATUS.UNAUTHORIZED);
 }
 
-export function createCannotDeleteSelfError(): AppError {
-  return new AppError(ERROR_CODES.CANNOT_DELETE_SELF, 'You cannot delete your own account', HTTP_STATUS.CONFLICT);
-}
-
-export function createCannotDeleteLastAdminError(): AppError {
+export function createCannotDeleteAdminError(): AppError {
   return new AppError(
-    ERROR_CODES.CANNOT_DELETE_LAST_ADMIN,
-    'Cannot delete the last administrator account',
+    ERROR_CODES.CANNOT_DELETE_ADMIN,
+    'Admin users cannot be deleted',
     HTTP_STATUS.CONFLICT
   );
 }
