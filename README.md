@@ -46,7 +46,7 @@ The architecture is designed so these features can be added later without major 
 - **Axios** for API test client
 
 ### Infrastructure
-- **pnpm workspaces** for monorepo management
+- **npm workspaces** for monorepo management
 - **JSON file storage** for users and sessions
 - **Concurrent-safe locking** for file operations
 - **Timezone-aware** session expiration
@@ -174,8 +174,7 @@ root/
 │   ├── users.json
 │   └── sessions.json
 │
-├── package.json             # Root package
-├── pnpm-workspace.yaml      # Workspace config
+├── package.json             # Root package (npm workspaces config)
 ├── tsconfig.json            # Root TypeScript config
 ├── .eslintrc.json          # ESLint config
 ├── .prettierrc              # Prettier config
@@ -186,14 +185,7 @@ root/
 
 ## Prerequisites
 
-- **Node.js**: 18.0.0 or higher
-- **pnpm**: 8.0.0 or higher
-
-Install pnpm globally:
-
-```bash
-npm install -g pnpm
-```
+- **Node.js**: 18.0.0 or higher (includes npm)
 
 ## Installation
 
@@ -207,7 +199,7 @@ cd Stock-Analyser
 2. Install dependencies:
 
 ```bash
-pnpm install
+npm install
 ```
 
 3. Set up environment:
@@ -220,7 +212,7 @@ cp .env.example .env
 4. Initialize admin user:
 
 ```bash
-pnpm seed
+npm run seed
 ```
 
 This creates the initial admin user with credentials from `.env`:
@@ -236,7 +228,7 @@ Username: admin
 Start all services in development mode:
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 This runs both frontend and backend concurrently.
@@ -246,7 +238,7 @@ This runs both frontend and backend concurrently.
 Start the React development server:
 
 ```bash
-pnpm dev:web
+npm run dev:web
 ```
 
 Runs on: http://localhost:5173
@@ -256,7 +248,7 @@ Runs on: http://localhost:5173
 Start the Fastify server:
 
 ```bash
-pnpm dev:api
+npm run dev:api
 ```
 
 Runs on: http://localhost:3001
@@ -281,7 +273,7 @@ Or create additional users through the User Management interface.
 Run API tests with Vitest:
 
 ```bash
-pnpm test:api
+npm run test:api
 ```
 
 Tests cover:
@@ -296,7 +288,7 @@ Tests cover:
 Run Playwright E2E tests:
 
 ```bash
-pnpm test:e2e
+npm run test:e2e
 ```
 
 Tests cover:
@@ -312,7 +304,7 @@ Tests cover:
 View test results in HTML:
 
 ```bash
-pnpm test:e2e:ui
+npm run test:e2e:ui
 ```
 
 ## Building
@@ -320,7 +312,7 @@ pnpm test:e2e:ui
 Build all packages:
 
 ```bash
-pnpm build
+npm run build
 ```
 
 Outputs:
@@ -333,19 +325,19 @@ Outputs:
 ### Type Checking
 
 ```bash
-pnpm typecheck
+npm run typecheck
 ```
 
 ### Linting
 
 ```bash
-pnpm lint
+npm run lint
 ```
 
 ### Formatting
 
 ```bash
-pnpm format
+npm run format
 ```
 
 ## API Endpoints
@@ -543,7 +535,7 @@ WEB_PORT=5174
 Ensure environment variables are set:
 
 ```bash
-pnpm seed
+npm run seed
 # If fails, check .env file exists and ADMIN_PASSWORD is set
 ```
 
@@ -552,11 +544,10 @@ pnpm seed
 Clean and reinstall:
 
 ```bash
-pnpm clean  # If available
-rm -rf node_modules pnpm-lock.yaml
-pnpm install
-pnpm seed
-pnpm test:api
+rm -rf node_modules package-lock.json
+npm install
+npm run seed
+npm run test:api
 ```
 
 ### Session Expires Immediately

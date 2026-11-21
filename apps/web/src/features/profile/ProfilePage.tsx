@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../auth/AuthContext';
 import { apiClient, handleApiError } from '../../lib/api';
 
 interface ProfileData {
@@ -11,7 +10,6 @@ interface ProfileData {
 }
 
 export const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
 

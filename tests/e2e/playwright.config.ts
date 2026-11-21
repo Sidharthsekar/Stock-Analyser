@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 export default defineConfig({
   testDir: './tests',
@@ -22,12 +23,14 @@ export default defineConfig({
 
   webServer: [
     {
-      command: 'pnpm -C apps/web dev',
+      command: 'npm run dev -w apps/web',
+      cwd: path.resolve(import.meta.dirname, '../..'),
       url: 'http://localhost:5173',
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'pnpm -C apps/api dev',
+      command: 'npm run dev -w apps/api',
+      cwd: path.resolve(import.meta.dirname, '../..'),
       url: 'http://localhost:3001/health',
       reuseExistingServer: !process.env.CI,
     },

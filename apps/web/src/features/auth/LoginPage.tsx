@@ -4,7 +4,7 @@ import { useAuth } from '../auth/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, authenticated, sessionExpiredMessage, setSessionExpired } = useAuth();
+  const { login, authenticated, sessionExpiredMessage } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);

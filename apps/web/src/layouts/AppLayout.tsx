@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../features/auth/AuthContext';
 
 interface AppLayoutProps {
   children: React.ReactNode;
