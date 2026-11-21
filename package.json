@@ -4,25 +4,33 @@
   "description": "Lightweight TypeScript monorepo for stock market research (foundation only)",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tests/*"
+  ],
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "pnpm --parallel -r run dev",
-    "dev:web": "pnpm -C apps/web dev",
-    "dev:api": "pnpm -C apps/api dev",
-    "build": "pnpm --filter @stock-analyser/shared build && pnpm --filter @stock-analyser/api --filter @stock-analyser/web build",
-    "lint": "pnpm -r run lint",
-    "typecheck": "pnpm -r run typecheck",
-    "format": "pnpm -r run format",
-    "test:api": "pnpm -C tests/api run test",
-    "test:e2e": "pnpm -C tests/e2e run test",
-    "test:e2e:ui": "pnpm -C tests/e2e run test:ui",
-    "seed": "pnpm --filter @stock-analyser/shared build && pnpm -C apps/api run seed"
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w apps/api",
+    "build": "npm run build -w @stock-analyser/shared && npm run build -w @stock-analyser/api -w @stock-analyser/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present",
+    "test:api": "npm run test -w @stock-analyser/api",
+    "test:e2e": "npm run test -w @stock-analyser/tests-e2e",
+    "test:e2e:ui": "npm run test:ui -w @stock-analyser/tests-e2e",
+    "seed": "npm run build -w @stock-analyser/shared && npm run seed -w @stock-analyser/api"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "typescript": "^5.3.3"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.6",
+    "concurrently": "^10.0.7",
+    "globals": "^17.14.0",
+    "typescript": "^5.9.3"
   }
 }

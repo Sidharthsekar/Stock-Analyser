@@ -59,7 +59,7 @@ export const UsersPage: React.FC = () => {
       await apiClient.delete(`/api/users/${userId}`);
       setUsers(users.filter((u) => u.id !== userId));
       setDeleteConfirmId(null);
-    } catch (error) {
+    } catch {
       // Error handling
     }
   };

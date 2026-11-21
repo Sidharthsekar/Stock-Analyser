@@ -4,20 +4,14 @@ Quick guide to get the application running locally.
 
 ## Prerequisites
 
-- **Node.js** 18.0.0 or higher
-- **pnpm** 8.0.0 or higher
-
-Install pnpm if you don't have it:
-```bash
-npm install -g pnpm
-```
+- **Node.js** 18.0.0 or higher (includes npm)
 
 ## Quick Start (5 minutes)
 
 ### 1. Install Dependencies
 
 ```bash
-pnpm install
+npm install
 ```
 
 ### 2. Setup Environment
@@ -31,7 +25,7 @@ The `.env` file has sensible defaults for local development. No changes needed.
 ### 3. Initialize Admin User
 
 ```bash
-pnpm seed
+npm run seed
 ```
 
 This creates an initial admin account with:
@@ -41,7 +35,7 @@ This creates an initial admin account with:
 ### 4. Start the Application
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 This starts both frontend and backend servers concurrently.
@@ -65,7 +59,7 @@ Password: Admin@123
 ### Frontend Only
 
 ```bash
-pnpm dev:web
+npm run dev:web
 ```
 
 Runs on http://localhost:5173
@@ -73,7 +67,7 @@ Runs on http://localhost:5173
 ### Backend Only
 
 ```bash
-pnpm dev:api
+npm run dev:api
 ```
 
 Runs on http://localhost:3001
@@ -85,7 +79,7 @@ Runs on http://localhost:3001
 ### Run API Tests
 
 ```bash
-pnpm test:api
+npm run test:api
 ```
 
 Tests authentication, authorization, and all API endpoints.
@@ -93,7 +87,7 @@ Tests authentication, authorization, and all API endpoints.
 ### Run E2E Tests
 
 ```bash
-pnpm test:e2e
+npm run test:e2e
 ```
 
 Tests complete user workflows using Playwright.
@@ -101,7 +95,7 @@ Tests complete user workflows using Playwright.
 ### View E2E Test Results (UI)
 
 ```bash
-pnpm test:e2e:ui
+npm run test:e2e:ui
 ```
 
 ---
@@ -109,7 +103,7 @@ pnpm test:e2e:ui
 ## Build for Production
 
 ```bash
-pnpm build
+npm run build
 ```
 
 Creates optimized production builds:
@@ -139,16 +133,16 @@ WEB_PORT=5174
 Ensure `.env` file exists:
 ```bash
 cp .env.example .env
-pnpm seed
+npm run seed
 ```
 
 ### Clear Everything and Start Fresh
 
 ```bash
-rm -rf node_modules pnpm-lock.yaml
-pnpm install
-pnpm seed
-pnpm dev
+rm -rf node_modules package-lock.json
+npm install
+npm run seed
+npm run dev
 ```
 
 ---
@@ -205,17 +199,17 @@ Then login with the new credentials.
 
 | Command | Purpose |
 |---------|---------|
-| `pnpm install` | Install dependencies |
-| `pnpm seed` | Build shared and Create initial admin user |
-| `pnpm dev` | Start frontend + backend |
-| `pnpm dev:web` | Start frontend only |
-| `pnpm dev:api` | Start backend only |
-| `pnpm test:api` | Run API tests |
-| `pnpm test:e2e` | Run E2E tests |
-| `pnpm build` | Build all pacakages in dependency order |
-| `pnpm lint` | Check code quality |
-| `pnpm typecheck` | Check TypeScript types |
-| `pnpm format` | Auto-format code |
+| `npm install` | Install dependencies |
+| `npm run seed` | Build shared and Create initial admin user |
+| `npm run dev` | Start frontend + backend |
+| `npm run dev:web` | Start frontend only |
+| `npm run dev:api` | Start backend only |
+| `npm run test:api` | Run API tests |
+| `npm run test:e2e` | Run E2E tests |
+| `npm run build` | Build all pacakages in dependency order |
+| `npm run lint` | Check code quality |
+| `npm run typecheck` | Check TypeScript types |
+| `npm run format` | Auto-format code |
 
 ---
 
